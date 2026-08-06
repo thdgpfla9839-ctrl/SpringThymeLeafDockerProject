@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 public class RecipeServiceImpl implements RecipeService{
 
 	private final RecipeRepository rDao;
+	private final ChefRepository cDao;
 
 	@Override
 	public List<Recipe> findByTitleContains(String title) {
@@ -48,10 +49,10 @@ public class RecipeServiceImpl implements RecipeService{
 	}
 
 	@Override
-	public int[] getPageData(int page) {
+	public int[] getPageData(int page, int rowsize) {
 		// TODO Auto-generated method stub
 		
-		int totalpage = (int)(Math.ceil(rDao.count()/12.0));
+		int totalpage = (int)(Math.ceil(rDao.count()/(double)rowsize));
 		int startPage = ((page-1)/10*10)+1;
 		int endPage = ((page-1)/10*10)+10;
 		
@@ -60,5 +61,20 @@ public class RecipeServiceImpl implements RecipeService{
 		int[] pages = {page,totalpage,startPage,endPage};
 		
 		return pages;
+	}
+
+	@Override
+	public List<Chef> chefListData(int page) {
+		Pageable pg = PageRequest.of(page-1,20); // 20개씩 데이터 자르기
+		Page<Chef> pList=cDao.findAll(pg);
+		List<Chef> list = new ArrayList<Chef>();
+		
+		// 페이지를 리스트로 변환
+		if(pList!=null && pList.hasContent())
+		{
+			list = pList.getContent();
+		}
+		return list;
+		
 	}
 }

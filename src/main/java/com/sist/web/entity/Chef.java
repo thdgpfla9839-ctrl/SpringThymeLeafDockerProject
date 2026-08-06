@@ -10,6 +10,6 @@ public class Chef {
 
 	@Id 
 	private String chef;
-	private String postser;
+	private String poster;
 	private String mem_cont1,mem_cont3,mem_cont7,mem_cont2;
 }

@@ -3,9 +3,54 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-
+<style type="text/css">
+.row{
+margin: 0px auto;
+width: 800px;
+}
+</style>
 </head>
 <body>
-
+ <div class="container">
+  <div class="row">
+   <table class="table">
+    <tr>
+     <td>
+      <table class="table" th:each="vo:${list}">
+       <tr>
+        <td width="30%" class="text-center" rowspan="2">
+         <img th:src="${vo.poster}" class="img-circle" style="width: 100px; height: 100px;">
+        </td>
+        <td colspan="4" style="color: orange;"><h3>[[${vo.chef}]]</h3></td>
+       </tr>
+       <tr>
+        <td class="text-center">
+         <img src="/icon/m1.png">[[${vo.mem_cont1}]]
+        </td>
+        <td class="text-center">
+         <img src="/icon/m2.png">[[${vo.mem_cont3}]]
+        </td>
+        <td class="text-center">
+         <img src="/icon/m3.png">[[${vo.mem_cont7}]]
+        </td>
+        <td class="text-center">
+         <img src="/icon/m4.png">[[${vo.mem_cont2}]]
+        </td>
+       </tr>
+      </table>
+     </td>
+    </tr>
+   </table>
+  </div>
+   <div class="row text-center" style="margin-top: 20px;">
+    <ul class="pagination">
+     <li th:if="${pages[2]>1}"><a th:href="@{/recipe/chef_list(page=${pages[2]-1})}">&laquo;</a></li>
+     
+     <li th:each="i:${#numbers.sequence(pages[2],pages[3])}" th:class="${i==pages[0]?'active':''}"><a th:href="@{/main/main(page=${i})}">[[${i}]]</a></li>
+     
+     <li th:if="${pages[3]<pages[1]}"><a th:href="@{/recipe/chef_list(page=${pages[3]+1})}">&raquo;</a></li>
+    </ul>
+   </div>
+ </div>
 </body>
 </html>
