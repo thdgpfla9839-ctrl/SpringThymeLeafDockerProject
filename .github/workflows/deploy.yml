@@ -23,8 +23,10 @@ jobs:
       - run: ./gradlew clean build -x test
       # 실행 => jar 파일 생성 => java -jar app.jar
       - run: |
-          PID=$(lsof -t -i:8080)
-          [-n "$PID"] && kill -15 $PID || true
+          PID=$(lsof -t -i:8080 || true)
+          if [ -n "$PID" ]; then
+             kill -15 $PID || true
+          fi   
       - run: nohup java -jar buid/libs/*.0.0.1-SNAPSHOT.jar > app.log2>&1 &     
 
 
