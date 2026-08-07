@@ -4,39 +4,45 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style type="text/css">
-.row{
-margin: 0px auto;
-width: 960px;
+.row {
+   margin: 0px auto;
+   width: 960px;
 }
-
 p {
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 </style>
 </head>
 <body>
- <div class="container">
-  <div class="row">
-   <div class="col-sm-3" th:each="vo:${list}">
-    <a href="#">
-     <div class="thumbnail">
-      <img th:src="${vo.poster}" th:title="${vo.title}" style="width: 250px; height: 150px">
-       <p>[[${vo.chef}]]</p>
-     </div>
-    </a>
-   </div>
+  <div class="container">
+    <div class="row">
+    총 <span style="color: green;font-size: 20px">[[${#numbers.formatInteger(count,3,'COMMA')}]]</span>개의 맛있는 레시피가 있습니다.
+    </div>
+    <div class="row" style="margin-top: 10px">
+      <div class="col-sm-3" th:each="vo:${list}">
+        <a th:href="@{/recipe/detail(no=${vo.no})}">
+          <div class="thumbnail">
+            <img th:src="${vo.poster}" 
+                 th:title="${vo.title}"
+                 style="width: 250px;height: 150px">
+            <p>[[${vo.chef}]]</p>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="row text-center" style="margin-top: 20px">
+      <ul class="pagination">
+        <li th:if="${pages[2]>1}"><a th:href="@{/main/main(page=${pages[2]-1})}">&laquo;</a></li>
+        
+        <li th:each="i:${#numbers.sequence(pages[2],pages[3])}"
+            th:class="${i==pages[0]?'active':''}"
+        ><a th:href="@{/main/main(page=${i})}">[[${i}]]</a></li>
+        
+        <li th:if="${pages[3]<pages[1]}"><a th:href="@{/main/main(page=${pages[3]+1})}">&raquo;</a></li>
+      </ul>
+    </div>
   </div>
-   <div class="row text-center" style="margin-top: 20px;">
-    <ul class="pagination">
-     <li th:if="${pages[2]>1}"><a th:href="@{/main/main(page=${pages[2]-1})}">&laquo;</a></li>
-     
-     <li th:each="i:${#numbers.sequence(pages[2],pages[3])}" th:class="${i==pages[0]?'active':''}"><a th:href="@{/main/main(page=${i})}">[[${i}]]</a></li>
-     
-     <li th:if="${pages[3]<pages[1]}"><a th:href="@{/main/main(page=${pages[3]+1})}">&raquo;</a></li>
-    </ul>
-   </div>
- </div>
 </body>
 </html>

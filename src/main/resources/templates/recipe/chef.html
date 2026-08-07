@@ -19,9 +19,15 @@ width: 800px;
       <table class="table" th:each="vo:${list}">
        <tr>
         <td width="30%" class="text-center" rowspan="2">
+         <a th:href="@{/recipe/chef_recipe(chef=${vo.chef})}">
          <img th:src="${vo.poster}" class="img-circle" style="width: 100px; height: 100px;">
+         </a>
         </td>
-        <td colspan="4" style="color: orange;"><h3>[[${vo.chef}]]</h3></td>
+        <td colspan="4" style="color: orange;">
+         <h3>
+         <a th:href="@{/recipe/chef_recipe(chef=${vo.chef})}">[[${vo.chef}]]</a>
+         </h3>
+        </td>
        </tr>
        <tr>
         <td class="text-center">

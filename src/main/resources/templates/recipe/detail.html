@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style type="text/css">
+.row {
+   margin: 0px auto;
+   width: 850px;
+}
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <table class="table">
+        <tr>
+         <td colspan="3" class="text-center">
+           <img th:src="${vo.poster}" style="width: 750px;height: 350px;object-fit:cover">
+         </td>
+        </tr>
+        <tr>
+         <td colspan="3" class="text-center">
+           <h3>[[${vo.title}]]</h3>
+         </td>
+        </tr>
+        <tr>
+         <td colspan="3" class="text-center">
+           [[${vo.content}]]
+         </td>
+        </tr>
+        <tr>
+         <td colspan="3" class="text-right">
+           <a href="javascript:history.back()"
+             class="btn btn-sm btn-danger">목록</a>
+         </td>
+        </tr>
+        <tr>
+          <td class="text-center"><img src="/icon/a1.png"></td>
+          <td class="text-center"><img src="/icon/a2.png"></td>
+          <td class="text-center"><img src="/icon/a3.png"></td>
+        </tr>
+        <tr>
+          <td class="text-center">[[${vo.info1}]]</td>
+          <td class="text-center">[[${vo.info2}]]</td>
+          <td class="text-center">[[${vo.info3}]]</td>
+        </tr>
+      </table>
+      <table>
+        <tr>
+         <td colspan="2"><h3>[조리순서]</h3></td>
+        </tr>
+        <tr>
+          <td>
+            <table class="table" th:each="m,stat:${mList}">
+              <tr>
+                <td width=80% class="text-left">[[${m}]]</td>
+                <td width="20%" class="text-right">
+                  <img th:src="${iList[stat.index]}" style="width:170px;height: 120px"
+                   class="img-rounded"
+                  >
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+      <table class="table">
+        <tr>
+          <td colspan="2"><h3>[레시피 작성자]</h3></td>
+        </tr>
+        <tr>
+          <td width=30% class="text-center" rowspan="2">
+            <img th:src="${vo.chef_poster}"
+              style="width: 60px;height: 60px"
+              class="img-circle"
+             >
+          </td>
+          <td width=70%><b>[[${vo.chef}]]</b></td>
+        </tr>
+        <tr>
+          <td width=70%>[[${vo.chef_profile}]]</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

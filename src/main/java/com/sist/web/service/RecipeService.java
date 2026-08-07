@@ -1,18 +1,22 @@
 package com.sist.web.service;
 
-import java.util.*;
-import com.sist.web.entity.*;
+
+import java.util.List;
+
+import com.sist.web.entity.Chef;
+import com.sist.web.entity.Recipe;
+import com.sist.web.entity.RecipeDetail;
 public interface RecipeService {
 	
-	// 타이틀(레시피제목) 검색
-	public List<Recipe> findByTitleContains(String title);
-	// 쉐프검색
-	public List<Recipe> findByChefContains(String chef);
-	
+
+	public List<Recipe> findByTitleContains(String title, int page);
+	public List<Recipe> findByChefContains(String chef, int page);
 	public List<Recipe> recipeListData(int page);
 	public int[] getPageData(int page, int rowsize);
-	
-	
 	public List<Chef> chefListData(int page);
+	public int[] getPageDataFind(int mode, int page, int rowsize, String fd);
+	public int recipeCount();
+	public RecipeDetail findByNo(int no);
+	
 
 }
