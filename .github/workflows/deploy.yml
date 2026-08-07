@@ -3,7 +3,7 @@ name: Deploy Git Action
 on:
   push:
     branches:
-      - master
+      - main
 # 작업 지시 
 jobs:
   deploy:
