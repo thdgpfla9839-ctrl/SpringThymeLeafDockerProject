@@ -20,14 +20,14 @@ p {
     <div class="row">
     총 <span style="color: green;font-size: 20px">[[${#numbers.formatInteger(count,3,'COMMA')}]]</span>개의 맛있는 레시피가 있습니다.
     </div>
-    <div class="row" style="margin-top: 10px">
-      <div class="col-sm-3" th:each="vo:${list}">
+    <div class="row" style="margin-top: 10px"> 
+      <div class="col-sm-3" th:each="vo:${list}"> 
         <a th:href="@{/recipe/detail(no=${vo.no})}">
           <div class="thumbnail">
             <img th:src="${vo.poster}" 
                  th:title="${vo.title}"
                  style="width: 250px;height: 150px">
-            <p>[[${vo.chef}]]</p>
+            <p style="color: red;">[[${vo.chef}]]</p>
           </div>
         </a>
       </div>
