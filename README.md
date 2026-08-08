@@ -1,4 +1,3 @@
-# SpringThymeLeafDockerProject
 <aside>
 💡
 
@@ -44,55 +43,82 @@ com.sist.web
 - 구조: Controller → Service(Impl) → JpaRepository → Oracle DB
 </aside>
 
-# 🚀배포 방식 (두 가지 버전의 배포)
-방식 1) GitHub Actions (jar 직접 실행) — 자동 배포
+# 🚀배포 방식 (두가지 버전의 배포)
 
-War/Tomcat이 아니라 jar로 직접 실행되는 Spring Boot 내장 서버(Tomcat 내장) 방식.
+---
 
-트리거: main 브랜치에 push
-실행 위치: self-hosted runner (우분투 서버)
-순서:
-Checkout
-JDK 21 설치 (setup-java)
-gradlew 권한 부여 (chmod +x)
-./gradlew clean build -x test 로 jar 빌드
-8080포트 사용 중인 기존 프로세스 종료 (kill -15)
-nohup java -jar로 재실행
-방식 2) Docker 컨테이너 배포
+### 방식 1) GitHub Actions (jar 직접 실행) ⇒ 자동배포
 
-우분투 서버에서 직접 docker 명령어를 입력해서 수동으로 진행함 (GitHub Actions와 별개 연습).
+<aside>
 
-이미지 빌드 및 실행
+📌 War/Tomcat이 아니라 jar로 직접 실행되는 Spring Boot 내장 서버(Tomcat 내장) 방식
 
-bash
+</aside>
+
+<aside>
+
+- main 브랜치에 push
+- 실행 위치: self-hosted runner (우분투 서버)
+- 순서:
+    1. Checkout
+    2. JDK 21 설치 (setup-java)
+    3. gradlew 권한 부여 (chmod +x)
+    4. ./gradlew clean build -x test 로 jar 빌드
+    5. 8080포트 사용 중인 기존 프로세스 종료 (kill -15)
+    6. nohup java -jar로 재실행
+</aside>
+
+---
+
+### 방식 2) Docker 컨테이너 배포
+
+<aside>
+
+📌 우분투 서버에서 직접 docker 명령어를 입력해서 수동으로 진행함 (GitHub Actions와 별개 연습)
+
+</aside>
+
+- **이미지 빌드 및 실행**
+
+```bash
 sudo docker build -t recipe-app .
 sudo docker run --name recipe -it -d -p 8080:8080 recipe-app
+```
 
-Docker Hub에 올리기
+- **Docker Hub에 올리기**
 
-bash
+```bash
 sudo docker login -u 도커이름
 sudo docker tag recipe-app 도커이름/recipe-app
 sudo docker push 도커이름/recipe-app
+```
 
-다른 서버에서 이미지 받아오기
+- **다른 서버에서 이미지 받아오기**
 
-bash
+```bash
 sudo docker pull 도커이름/recipe-app
 sudo docker run -d -p 8080:8080 도커이름/recipe-app
+```
 
-docker-compose로 관리
+- **docker-compose로 관리**
 
-yaml
+```yaml
 version: "3"
 services:
   app:
-    image: 도커이름/recipe-app
+    image: thdgpfla5659(도커이름)/recipe-app
     ports:
       - "8080:8080"
-bash
+```
+
+```bash
 sudo docker compose up -d
 sudo docker compose down
+```
+
+---
+
+<aside>
 
 💡  GitHub Actions 방식과 Docker 방식의 **차이**: 
 
@@ -106,19 +132,30 @@ sudo docker compose down
 
 ---
 
-1) .yml 파일 띄어쓰기 오류
-bash
+#### 1) .yml 파일 띄어쓰기 오류
+
 [-n "$PID"] && kill -15 $PID || true
 
-원인: 대괄호([)와 -n 사이에 띄어쓰기가 없음. bash에서 [는 "test"라는 명령어의 다른 이름이라, 띄어쓰기 없이 [-n이라고 붙여 쓰면 컴퓨터는 이걸 [-n이라는 존재하지 않는 명령어로 착각해서 에러를 냄.
+<aside>
+⚠️
 
-해결: [ -n "$PID" ]처럼 대괄호 앞뒤로 띄어쓰기 넣기.
+**원인**: `[-n "$PID"]` — **대괄호(`[`)와 `-n` 사이에 띄어쓰기가 없음**
+
+bash에서 `[`는 사실 "test"라는 명령어의 다른 이름이라, 띄어쓰기 없이 `[-n`이라고 붙여 쓰면 컴퓨터는 이걸 `[-n`이라는 **존재하지 않는 명령어**로 착각해서 "그런 명령어 없음" 에러를 냄
+**해결**: `[ -n "$PID" ]`처럼 대괄호 앞뒤로 띄어쓰기 넣기
+
+</aside>
+
 ---
 
-2) env: 들여쓰기 오류 → YAML 구조 깨짐
+**2) env: 들여쓰기 오류 → YAML 구조 깨짐**
+
 Invalid workflow file: You have an error in your yaml syntax on line 13
 
-원인: env: 블록의 들여쓰기가 첫 번째 run 스텝(PID=...)의 하위 요소인지, 다른 위치인지 애매하게 걸쳐 있어서 steps: 시퀀스 전체의 YAML 구조가 깨짐. GitHub은 이 여파를 steps: 바로 아래 첫 주석 줄(13번째 줄)에서 에러로 표시함 (실제 문제 지점과 에러가 보고되는 줄이 다름).
+<aside>
+⚠️
 
-해결: env: 블록을 두 번째 run 스텝(nohup java -jar) 바로 아래로 옮기고, run:과 정확히 같은 들여쓰기 칸수로 맞춤
+**원인**: `env:` 블록의 들여쓰기가, 첫 번째 run 스텝(`PID=...`)의 하위 요소라거나, 다른 위치로 보기에도 애매함 ⇒  `steps:` 시퀀스 전체의 YAML 구조가 깨졌고, GitHub는 13번째 줄(`steps:` 바로 아래 첫 주석)에서 에러로 표시
+**해결**: env: 블록을 두 번째 run 스텝(nohup java -jar) 바로 아래로 옮기고, run: 과 정확히 같은 들여쓰기 칸수로 조정
+
 </aside>
