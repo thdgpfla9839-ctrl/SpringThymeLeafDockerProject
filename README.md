@@ -44,84 +44,55 @@ com.sist.web
 - 구조: Controller → Service(Impl) → JpaRepository → Oracle DB
 </aside>
 
-# 🚀배포 방식 (두가지 버전의 배포)
+# 🚀배포 방식 (두 가지 버전의 배포)
+방식 1) GitHub Actions (jar 직접 실행) — 자동 배포
 
----
+War/Tomcat이 아니라 jar로 직접 실행되는 Spring Boot 내장 서버(Tomcat 내장) 방식.
 
-### 방식 1) GitHub Actions (jar 직접 실행) ⇒ 자동배포
+트리거: main 브랜치에 push
+실행 위치: self-hosted runner (우분투 서버)
+순서:
+Checkout
+JDK 21 설치 (setup-java)
+gradlew 권한 부여 (chmod +x)
+./gradlew clean build -x test 로 jar 빌드
+8080포트 사용 중인 기존 프로세스 종료 (kill -15)
+nohup java -jar로 재실행
+방식 2) Docker 컨테이너 배포
 
----
+우분투 서버에서 직접 docker 명령어를 입력해서 수동으로 진행함 (GitHub Actions와 별개 연습).
 
-### 방식 2) Docker 컨테이너 배포
+이미지 빌드 및 실행
 
----
-
-<aside>
-
-📌 War/Tomcat이 아니라 jar로 직접 실행되는 Spring Boot 내장 서버(Tomcat 내장) 방식
-
-</aside>
-
-<aside>
-
-- main 브랜치에 push
-- 실행 위치: self-hosted runner (우분투 서버)
-- 순서:
-    1. Checkout
-    2. JDK 21 설치 (setup-java)
-    3. gradlew 권한 부여 (chmod +x)
-    4. ./gradlew clean build -x test 로 jar 빌드
-    5. 8080포트 사용 중인 기존 프로세스 종료 (kill -15)
-    6. nohup java -jar로 재실행
-</aside>
-
-<aside>
-
-📌 우분투 서버에서 직접 docker 명령어를 입력해서 수동으로 진행함 (GitHub Actions와 별개 연습)
-
-</aside>
-
-- **이미지 빌드 및 실행**
-
-```bash
+bash
 sudo docker build -t recipe-app .
 sudo docker run --name recipe -it -d -p 8080:8080 recipe-app
-```
 
-- **Docker Hub에 올리기**
+Docker Hub에 올리기
 
-```bash
+bash
 sudo docker login -u 도커이름
 sudo docker tag recipe-app 도커이름/recipe-app
 sudo docker push 도커이름/recipe-app
-```
 
-- **다른 서버에서 이미지 받아오기**
+다른 서버에서 이미지 받아오기
 
-```bash
+bash
 sudo docker pull 도커이름/recipe-app
 sudo docker run -d -p 8080:8080 도커이름/recipe-app
-```
 
-- **docker-compose로 관리**
+docker-compose로 관리
 
-```yaml
+yaml
 version: "3"
 services:
   app:
-    image: thdgpfla5659(도커이름)/recipe-app
+    image: 도커이름/recipe-app
     ports:
       - "8080:8080"
-```
-
-```bash
+bash
 sudo docker compose up -d
 sudo docker compose down
-```
-
----
-
-<aside>
 
 💡  GitHub Actions 방식과 Docker 방식의 **차이**: 
 
