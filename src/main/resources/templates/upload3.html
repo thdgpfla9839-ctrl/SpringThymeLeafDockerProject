@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<style type="text/css">
+.container {
+	margin-top: 50px;
+}
+
+.row {
+	margin: 0px auto;
+	width: 500px;
+}
+</style>
+<script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
+<script type="text/javascript">
+let fileIndex=0
+$(function(){
+	$('#addBtn').on('click',function(){
+		$('#upload-table tbody').append(
+				'<tr id="m'+(fileIndex)+'">'
+				+'<td width=30%> Files:'+(fileIndex+1)+'</td>'
+				+'<td width=70%>'
+				+'<input type=file name=>"files">'
+				+'</td>'
+				+'</tr>'
+				)
+				fileIndex++
+	})
+	$('#removeBtn').on('click',function(){
+		if(fileIndex>-1)
+			{
+			   $('#m'+(fileIndex-1)).remove()
+			   fileIndex--
+			}
+		
+	})
+})
+</script>
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			<h3 class="text-center">Jquery 이용</h3>
+			<form action="/multi-upload" method="post" enctype="multipart/form-data">
+				<table class="table">
+					<tr>
+						<td class="text-center">
+							<button type="button" class="btn-xs btn-info" id="addBtn">Add</button>
+							<button type="button" class="btn-xs btn-warning" id="removeBtn">Remove</button>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<table class="table" id="upload-table">
+								<tbody>
+
+								</tbody>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td class="text-center">
+							<button type="submit" class="btn-sm btn-primary">전송</button>
+						</td>
+					</tr>
+				</table>
+			</form>
+		</div>
+	</div>
+</body>
+</html>

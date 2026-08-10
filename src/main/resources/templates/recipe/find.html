@@ -49,7 +49,7 @@ p {
             :class="i==curpage?'active':''"
         ><a class="a-link" @click="move(i)">{{i}}</a></li>
         
-        <li v-if="endPage<totalpage"><a class="a-link" @click="move(endPage+1)">&raquo;</a></li>
+        <li v-if="endPage &lt; totalpage"><a class="a-link" @click="move(endPage+1)">&raquo;</a></li>
       </ul>
     </div>
   </div>

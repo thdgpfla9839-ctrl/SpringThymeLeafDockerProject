@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<!--  vue를 이용해볼 예정 스크립트 부분 CDM방식-->
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<style type="text/css">
+.container{
+ margin-top: 50px;
+}
+.row{
+ margin:  0px auto;
+ width: 500px;
+}
+</style>
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.mis.js"></script>
+</head>
+<body>
+ <div class="container">
+  <div class="row">
+   <h3 class="text-center">Vue를 이용한 Multi Upload</h3>
+    <input type="file" size="20" style="float: left" multiple @change="handlerFile">
+      <button @click="submit" class="btn-sm btn-danger" style="float: left">업로드</button>
+  </div>
+ </div>
+ <script>
+  const app=Vue.createApp({
+	  data(){
+		  return{
+			  files:[]
+		  }
+	  },
+	  methods:{
+		  handlerFile(e){
+			  this.files=e.target.files
+			  console.log(this.files)
+		  },
+		  submit(){
+			  const formData=new FormData()
+			  for(let i of this.files)
+			  {
+				 formData.append('files',i)    
+			   }
+			  console.log(formData)
+			  axios.post('/multi-upload',formData,{
+				  headers:{
+					  'Context-Type':'multipart/form-data'
+				  }
+			  }).then(()=>alert("등록 완료"))
+		  }
+		  
+	  }
+	  
+  }).mount(".container")
+ </script>
+</body>
+</html>
