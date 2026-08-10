@@ -21,14 +21,23 @@ jobs:
       - run: chmod +x gradlew
       # 빌드 
       - run: ./gradlew clean build -x test
-      # 실행 => jar파일 생성 => java -jar app.jar
+      # docker 이미지 생성
+      - run: docker build -t mini-app .
+      # 기존 docker process를 중지하거나 삭제
       - run: |
-          PID=$(lsof -t -i:8080 || true)
-          if [ -n "$PID" ]; then
-             kill -15 "$PID" || true
-          fi
+         docker stop mini-app || true
+         docker rm mini-app || true
+      # 새로운 docker 실행 => 도커를 컨테이너라고 함
+      - run: |
+          docker run --name mini-app -d -p 8080:8080 mini-app
+      # 실행 => jar파일 생성 => java -jar app.jar
+      #- run: |
+          #PID=$(lsof -t -i:8080 || true)
+          #if [ -n "$PID" ]; then
+             #kill -15 "$PID" || true
+          #fi
        
-      - run: nohup java -jar build/libs/SpringThymeLeafDockerProject-0.0.1-SNAPSHOT.jar
+      #- run: nohup java -jar build/libs/SpringThymeLeafDockerProject-0.0.1-SNAPSHOT.jar
         env:
           RUNNER_TRACKING_ID: ""
           
